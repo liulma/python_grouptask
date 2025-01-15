@@ -4,7 +4,8 @@ from products import ProductGenerator
 import pandas as pd
 
 def clean_products(product_data):
-    product_data.dropna(subset=['id']).fillna({'name': 'Unknown', 'category': 'Other', 'price': 0.0})
+    product_data.dropna(subset=['id'])
+    product_data.fillna({'name': 'Unknown', 'category': 'Other', 'price': 0.0})
 
     product_data.drop_duplicates()
 
