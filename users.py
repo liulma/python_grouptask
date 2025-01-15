@@ -15,7 +15,7 @@ class UserDataGenerator:
         for user_id in range(1, self.num_users + 1):
             name = self.fake.name()
             email = self.fake.email()
-            signup_date = self.fake.date()
+            signup_date = self.fake.date_time()
             user_data.append({
                 "user_id": user_id,
                 "name": name,
