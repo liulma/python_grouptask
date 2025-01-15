@@ -6,6 +6,7 @@ class ProductGenerator:
     def __init__(self, num_products):
         self.num_products = num_products
         self.fake = Faker()
+        self.products = self.generate_products()
 
     def generate_products(self):
         products = []
