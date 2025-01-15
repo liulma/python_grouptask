@@ -4,6 +4,16 @@ from products import ProductGenerator
 import pandas as pd
 import numpy as np
 
+def clean_products(product_data):
+    product_data.dropna(subset=['id'])
+    product_data.fillna({'name': 'Unknown', 'category': 'Other', 'price': 0.0})
+
+    product_data.drop_duplicates()
+
+    product_data.drop(product_data[~product_data["id"].apply(lambda x: isinstance(x,int))].index, inplace=True)
+
+    return product_data
+
 def clean_user_data(df_users):
     df_users['signup_date'] = pd.to_datetime(df_users['signup_date'], errors='coerce')
     df_users['signup_date'] = df_users['signup_date'].dt.date
@@ -43,6 +53,9 @@ user_data = user_generator.get_user_data()
 
 # print(user_data)
 print(transaction_generator.transactions)
+
+product_cleaned = clean_products(product_data)
+print(product_cleaned)
 
 user_data_cleaned = clean_user_data(user_data)
 
