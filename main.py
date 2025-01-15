@@ -4,6 +4,18 @@ from products import ProductGenerator
 import pandas as pd
 import numpy as np
 
+def clean_user_data(df_users):
+    df_users['signup_date'] = pd.to_datetime(df_users['signup_date'], errors='coerce')
+    df_users['signup_date'] = df_users['signup_date'].dt.date
+    df_users['user_id'] = df_users['user_id'].apply(lambda x: x if isinstance(x, int) else np.nan)
+    df_users = df_users.dropna(subset=["user_id"])
+    df_users = df_users.drop_duplicates(subset=['user_id'])
+    df_users['email'] = df_users['email'].fillna("email missing")
+    df_users['name'] = df_users['name'].fillna("name missing")
+    df_users['name'] = df_users['name'].str.strip().str.replace(r'\n|\r', ' ', regex=True)
+    df_users['email'] = df_users['email'].str.strip().str.replace(r'\n|\r', ' ', regex=True)
+    return df_users
+
 def clean_transactions(transaction_data: pd.DataFrame):
     #poistetaan duplikaatit
     transaction_data.drop_duplicates(inplace=True)
@@ -31,8 +43,11 @@ user_data = user_generator.get_user_data()
 
 # print(user_data)
 print(transaction_generator.transactions)
+
+user_data_cleaned = clean_user_data(user_data)
+
 # print(product_data)
 
 df_transactions = transaction_generator.transactions
 clean_transactions(df_transactions)
-print(transaction_generator.transactions)
+
