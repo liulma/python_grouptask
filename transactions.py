@@ -13,6 +13,15 @@ class Transaction:
 
     def generate_transactions(self):
         transaction_list = []
+        # fake_transaction = {
+        #         "id" : 100,
+        #         "user_id" : 1,
+        #         "product_id" : 1,
+        #         "quantity" : None,
+        #         "date" : None
+        #     }
+        # transaction_list.append(fake_transaction)
+        # transaction_list.append(fake_transaction)
         for i in range(0, self.amount):
             new_transaction = {
                 "id" : i,
