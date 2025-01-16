@@ -85,6 +85,6 @@ total_sales_per_category = merged_transactions.groupby('category')['total_sum_pr
 top_5_categories = total_sales_per_category.sort_values(by='total_sum_product', ascending=False).head(5).reset_index()
 print(top_5_categories)
 
-merged_transactions.to_json('merged.json', orient = 'split', compression = 'infer', index = 'true')
-read_json = pd.read_json('merged.json', orient = 'split', compression = 'infer')
+merged_transactions.to_json('merged.json', orient = 'records', compression = 'infer', indent=4)
+read_json = pd.read_json('merged.json', orient = 'records', compression = 'infer')
 print(read_json)
