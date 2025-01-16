@@ -52,10 +52,10 @@ product_data = product_generator.get_product_data()
 user_data = user_generator.get_user_data()
 
 # print(user_data)
-print(transaction_generator.transactions)
+# print(transaction_generator.transactions)
 
 product_cleaned = clean_products(product_data)
-print(product_cleaned)
+# print(product_cleaned)
 
 user_data_cleaned = clean_user_data(user_data)
 
@@ -64,3 +64,22 @@ user_data_cleaned = clean_user_data(user_data)
 df_transactions = transaction_generator.transactions
 clean_transactions(df_transactions)
 
+merged_transactions = pd.merge(df_transactions, user_data_cleaned, on='user_id', how='inner')
+#print(merged_transactions)
+
+merged_transactions = pd.merge(merged_transactions, product_cleaned, left_on='product_id', right_on='id', how='inner')
+#print(merged_transactions)
+
+merged_transactions['total spending'] = merged_transactions.groupby('user_id')['price'].transform('sum')
+print(merged_transactions)
+
+merged_transactions['total_sum_product'] = merged_transactions['quantity'] * merged_transactions['price']
+
+print(merged_transactions)
+total_sales_per_product = merged_transactions.groupby('product_id')['total_sum_product'].sum().reset_index()
+top_5_products = total_sales_per_product.sort_values(by='total_sum_product', ascending=False).head(5).reset_index()
+print(top_5_products)
+
+total_sales_per_category = merged_transactions.groupby('category')['total_sum_product'].sum().reset_index()
+top_5_categories = total_sales_per_category.sort_values(by='total_sum_product', ascending=False).head(5).reset_index()
+print(top_5_categories)
