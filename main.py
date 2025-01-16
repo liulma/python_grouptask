@@ -42,6 +42,9 @@ def clean_transactions(transaction_data: pd.DataFrame):
     transaction_data.drop(transaction_data[~transaction_data["product_id"].apply(lambda x: isinstance(x,int))].index, inplace=True)
     transaction_data.drop(transaction_data[~transaction_data["user_id"].apply(lambda x: isinstance(x,int))].index, inplace=True)
 
+def save_data_frame_to_json(filename: str, dataframe: pd.DataFrame):
+    dataframe.to_json(filename, orient="records", indent=4)
+
 users = 20
 products = 50
 transactions = 100
@@ -71,15 +74,19 @@ merged_transactions = pd.merge(merged_transactions, product_cleaned, left_on='pr
 #print(merged_transactions)
 
 merged_transactions['total spending'] = merged_transactions.groupby('user_id')['price'].transform('sum')
-print(merged_transactions)
+# print(merged_transactions)
 
 merged_transactions['total_sum_product'] = merged_transactions['quantity'] * merged_transactions['price']
 
-print(merged_transactions)
+# print(merged_transactions)
 total_sales_per_product = merged_transactions.groupby('product_id')['total_sum_product'].sum().reset_index()
 top_5_products = total_sales_per_product.sort_values(by='total_sum_product', ascending=False).head(5).reset_index()
-print(top_5_products)
+# print(top_5_products)
 
 total_sales_per_category = merged_transactions.groupby('category')['total_sum_product'].sum().reset_index()
 top_5_categories = total_sales_per_category.sort_values(by='total_sum_product', ascending=False).head(5).reset_index()
-print(top_5_categories)
+# print(top_5_categories)
+
+save_data_frame_to_json("merged.json", merged_transactions)
+save_data_frame_to_json("popular_category.json", top_5_categories)
+save_data_frame_to_json("popular_product.json", top_5_products)
